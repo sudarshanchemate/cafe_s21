@@ -218,7 +218,9 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 /* =========================================================
    Marquee
    ========================================================= */
-.marquee { background: var(--grad); padding: 18px 0; overflow: hidden; transform: rotate(-1.5deg) scaleX(1.03); margin: -22px 0 0; position: relative; z-index: 2; box-shadow: var(--shadow); }
+/* The tilted strip lives inside a clipping wrapper so its corners can never widen the page */
+.marquee-wrap { position: relative; z-index: 2; overflow: hidden; margin-top: -40px; padding: 22px 0; }
+.marquee { width: 110%; margin-left: -5%; background: var(--grad); padding: 18px 0; overflow: hidden; transform: rotate(-1.5deg); box-shadow: var(--shadow); }
 .marquee-track { display: flex; gap: 34px; width: max-content; animation: marquee 32s linear infinite; }
 .marquee span { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--espresso); white-space: nowrap; }
 .marquee i { font-style: normal; color: var(--espresso); opacity: .55; align-self: center; }
@@ -434,7 +436,17 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 .footer-phone a:hover { text-decoration: underline; }
 
 /* Floating quick-contact (bottom-left; back-to-top is bottom-right) */
-.quick-contact { position: fixed; left: 22px; bottom: 22px; z-index: 90; display: flex; flex-direction: column; gap: 12px; }
+.quick-contact {
+  position: fixed; left: 22px; bottom: calc(22px + env(safe-area-inset-bottom, 0px)); z-index: 90;
+  display: flex; flex-direction: column; gap: 12px;
+  opacity: 0; transform: translateY(30px) scale(.9); pointer-events: none; visibility: hidden;
+  transition: opacity .4s var(--ease), transform .5s var(--ease), visibility 0s linear .5s;
+}
+.quick-contact.show {
+  opacity: 1; transform: none; pointer-events: auto; visibility: visible;
+  transition: opacity .4s var(--ease), transform .5s var(--ease), visibility 0s;
+}
+.quick-contact:not(.show) .qc-wa::after { animation: none; }
 .qc {
   width: 54px; height: 54px; border-radius: 50%; display: grid; place-items: center; color: #fff;
   box-shadow: 0 10px 25px rgba(0,0,0,.25); transition: transform .35s var(--ease);
@@ -447,7 +459,10 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
   animation: waPing 2.4s ease-out infinite;
 }
 @keyframes waPing { from { transform: scale(1); opacity: .7; } to { transform: scale(1.6); opacity: 0; } }
-@media (max-width: 560px) { .quick-contact { left: 14px; bottom: 16px; } .to-top { right: 14px; bottom: 16px; } }
+@media (max-width: 560px) {
+  .quick-contact { left: 14px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+  .to-top { right: 14px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); }
+}
 
 .form-msg { text-align: center; margin-top: 16px; min-height: 1.4em; color: var(--coffee); font-weight: 500; }
 .form-msg.show { animation: popIn .5s var(--ease); }
@@ -465,7 +480,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 .socials a:hover { background: var(--grad); color: var(--espresso); transform: translateY(-5px); border-color: transparent; }
 .copy { font-size: .8rem; opacity: .6; margin-top: 10px; }
 
-.to-top { position: fixed; right: 26px; bottom: 26px; z-index: 90; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: var(--espresso); font-size: 1.3rem; font-weight: 700; box-shadow: var(--shadow); opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity .4s, transform .4s var(--ease); }
+.to-top { position: fixed; right: 26px; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); z-index: 90; width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: var(--espresso); font-size: 1.3rem; font-weight: 700; box-shadow: var(--shadow); opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity .4s, transform .4s var(--ease); }
 .to-top.show { opacity: 1; transform: none; pointer-events: auto; }
 .to-top:hover { transform: translateY(-5px); }
 

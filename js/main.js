@@ -28,12 +28,18 @@
   /* ---------- Header + back-to-top (rAF-throttled, only toggles when state changes) ---------- */
   const navbar = $('#navbar');
   const toTop = $('#toTop');
-  let scrolled = null, showTop = null, scrollTicking = false;
+  const quickContact = $('.quick-contact');
+  let scrolled = null, showFloat = null, scrollTicking = false;
   const onScrollFrame = () => {
     const y = window.scrollY;
-    const s = y > 40, t = y > 600;
+    const s = y > 40;
+    const f = y > 300; // floating buttons appear after a little scroll, hide again at the top
     if (s !== scrolled) { navbar.classList.toggle('scrolled', s); scrolled = s; }
-    if (t !== showTop) { toTop.classList.toggle('show', t); showTop = t; }
+    if (f !== showFloat) {
+      toTop.classList.toggle('show', f);
+      quickContact?.classList.toggle('show', f);
+      showFloat = f;
+    }
     scrollTicking = false;
   };
   window.addEventListener('scroll', () => {
