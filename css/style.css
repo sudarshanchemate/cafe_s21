@@ -29,7 +29,11 @@
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
-body { font-family: var(--sans); color: var(--text); background: var(--white); line-height: 1.7; overflow-x: hidden; }
+/* Nothing may ever widen the page sideways (prevents the white strip on mobile zoom-out).
+   `clip` is used where supported; `hidden` is the fallback for older browsers. */
+body { overflow-x: hidden; }
+@supports (overflow: clip) { html, body { overflow-x: clip; } }
+body { font-family: var(--sans); color: var(--text); background: var(--white); line-height: 1.7; }
 body.loading { overflow: hidden; }
 img { max-width: 100%; display: block; }
 figure { margin: 0; }
@@ -214,7 +218,7 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 /* =========================================================
    Marquee
    ========================================================= */
-.marquee { background: var(--grad); padding: 18px 0; overflow: hidden; transform: rotate(-1.5deg); margin: -22px -10px 0; position: relative; z-index: 2; box-shadow: var(--shadow); }
+.marquee { background: var(--grad); padding: 18px 0; overflow: hidden; transform: rotate(-1.5deg) scaleX(1.03); margin: -22px 0 0; position: relative; z-index: 2; box-shadow: var(--shadow); }
 .marquee-track { display: flex; gap: 34px; width: max-content; animation: marquee 32s linear infinite; }
 .marquee span { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--espresso); white-space: nowrap; }
 .marquee i { font-style: normal; color: var(--espresso); opacity: .55; align-self: center; }
@@ -477,6 +481,12 @@ button { font: inherit; cursor: pointer; border: none; background: none; }
 .delay-2 { transition-delay: .24s; }
 .delay-3 { transition-delay: .36s; }
 .menu-card.in-view, .g-item.in-view { transition-delay: 0s; transition-duration: .6s; }
+/* On tablets/phones, side-slides become gentle up-slides so nothing sits off-screen */
+@media (max-width: 880px) {
+  .reveal-left, .reveal-right { transform: translateY(40px); }
+  .reveal { transform: translateY(36px); }
+  .in-view { transform: none; }
+}
 
 /* =========================================================
    Responsive
